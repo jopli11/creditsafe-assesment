@@ -29,7 +29,7 @@ async def test_get_customer_after_create(async_client) -> None:
         json={
             "name": "Sam",
             "email": "sam@example.com",
-            "phone": "5551234567",
+            "phone": "07700900123",
             "request_details": "Need onboarding.",
         },
     )
@@ -58,7 +58,7 @@ async def test_list_customers_pagination(async_client) -> None:
             json={
                 "name": f"User{i}",
                 "email": f"u{i}@example.com",
-                "phone": "5551234567",
+                "phone": "07700900123",
                 "request_details": "x",
             },
         )
@@ -80,7 +80,7 @@ async def test_validation_error_on_bad_email(async_client) -> None:
         json={
             "name": "X",
             "email": "bad",
-            "phone": "5551234567",
+            "phone": "07700900123",
             "request_details": "y",
         },
     )

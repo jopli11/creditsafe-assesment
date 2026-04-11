@@ -25,8 +25,8 @@ describe("CustomerForm", () => {
     await user.click(screen.getByRole("button", { name: /submit request/i }));
 
     expect(await screen.findByText(/name is required/i)).toBeInTheDocument();
-    expect(await screen.findByText(/enter a valid email/i)).toBeInTheDocument();
-    expect(await screen.findByText(/phone is too short/i)).toBeInTheDocument();
+    expect(await screen.findByText(/email is required/i)).toBeInTheDocument();
+    expect(await screen.findByText(/phone number is required/i)).toBeInTheDocument();
   });
 
   it("submits valid payload and resets fields", async () => {
@@ -37,7 +37,7 @@ describe("CustomerForm", () => {
 
     await user.type(screen.getByRole("textbox", { name: "Name" }), "Taylor Morgan");
     await user.type(screen.getByRole("textbox", { name: "Email" }), "taylor@example.com");
-    await user.type(screen.getByRole("textbox", { name: "Phone" }), "5551234567");
+    await user.type(screen.getByRole("textbox", { name: "Phone" }), "07700900123");
     await user.type(screen.getByRole("textbox", { name: "Request details" }), "Please verify billing address.");
 
     await user.click(screen.getByRole("button", { name: /submit request/i }));
@@ -47,7 +47,7 @@ describe("CustomerForm", () => {
         expect.objectContaining({
           name: "Taylor Morgan",
           email: "taylor@example.com",
-          phone: "5551234567",
+          phone: "07700900123",
         }),
       );
     });

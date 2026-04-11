@@ -1,29 +1,28 @@
-import { useCallback, useState } from "react";
+import { useState } from "react";
+import { Link } from "react-router-dom";
 
-import { CustomerForm } from "@/components/customers/customer-form";
 import { CustomerList } from "@/components/customers/customer-list";
 import { PageLayout } from "@/components/layout/page-layout";
+import { Button } from "@/components/ui/button";
 import { useCustomersQuery } from "@/hooks/use-customers";
 
 const PAGE_SIZE = 20;
 
 export function CustomersPage() {
   const [offset, setOffset] = useState(0);
-  const { data, error, isLoading, mutate } = useCustomersQuery({
+  const { data, error, isLoading } = useCustomersQuery({
     limit: PAGE_SIZE,
     offset,
   });
 
-  const onCreated = useCallback(async () => {
-    await mutate();
-  }, [mutate]);
-
   return (
     <PageLayout>
-      <CustomerForm onCreated={onCreated} />
       <section className="space-y-3">
-        <div className="flex items-center justify-between gap-2">
+        <div className="flex flex-wrap items-center justify-between gap-2">
           <h2 className="text-lg font-semibold tracking-tight">Customers</h2>
+          <Button size="sm" asChild>
+            <Link to="/customers/new">New request</Link>
+          </Button>
         </div>
         {error ? (
           <p className="text-sm text-destructive" role="alert">

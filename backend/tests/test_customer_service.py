@@ -28,7 +28,7 @@ async def test_create_customer_persists_via_repository() -> None:
     payload = CustomerCreate(
         name="A",
         email="a@b.co",
-        phone="5551234567",
+        phone="07700900123",
         request_details="Hello",
     )
     result = await service.create_customer(payload)
