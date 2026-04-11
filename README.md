@@ -72,12 +72,6 @@ cd frontend; npm run test
 
 Backend tests use **SQLite in-memory** + FastAPI dependency overrides (no Docker required for `pytest`).
 
-## Interview notes (quick)
-
-- **Why layers?** Routers stay thin; business rules and enrichment live in `CustomerService`; SQL stays in `CustomerRepository` — easier unit testing and swapping storage later.
-- **Why SWR?** Automatic deduplication and cache-friendly refetch after `POST` (`mutate()`).
-- **Why sanitize on the API?** Defense in depth: ORM prevents SQL injection; `html.escape` on free-text reduces stored XSS if the same data is rendered in HTML elsewhere.
-
 ## License
 
 Private / assessment use.
