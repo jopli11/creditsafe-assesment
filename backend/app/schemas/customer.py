@@ -1,9 +1,4 @@
-"""Request/response models for customer endpoints.
-
-Validation mirrors the SRS: required fields, email format, and defensive
-sanitization for stored text (mitigates reflected/stored XSS if data is shown
-in a browser later).
-"""
+"""Request/response models: validation, email rules, HTML escaping on persisted text."""
 
 from __future__ import annotations
 

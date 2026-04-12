@@ -9,9 +9,7 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    # First boot on an empty volume can take 30–60s on Docker Desktop; without a
-    # long start_period, retries*interval exhausts before init finishes and the
-    # service stays "unhealthy", blocking the backend.
+    # Longer start_period: cold Postgres init on Docker Desktop can exceed default healthcheck windows.
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U app -d customers"]
       interval: 5s

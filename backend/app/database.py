@@ -1,8 +1,4 @@
-"""Async SQLAlchemy engine and session factory.
-
-The session is created per-request in route dependencies and closed after the
-response is sent (see `get_db_session` in `main.py`).
-"""
+"""Async engine and session factory; `get_session` is wired as a FastAPI dependency."""
 
 from collections.abc import AsyncGenerator
 

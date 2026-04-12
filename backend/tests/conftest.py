@@ -1,5 +1,17 @@
 """Pytest fixtures: in-memory SQLite + httpx async client with DI overrides."""
 
+import os
+
+# Settings and the DB engine initialize at import; env must be set first.
+os.environ.setdefault(
+    "DATABASE_URL",
+    "postgresql+asyncpg://app:app@localhost:5432/customers",
+)
+os.environ.setdefault(
+    "CORS_ORIGINS",
+    "http://localhost:5173,http://127.0.0.1:5173",
+)
+
 from collections.abc import AsyncGenerator
 
 import pytest
@@ -26,11 +38,7 @@ async def db_engine():
 
 @pytest_asyncio.fixture
 async def db_session(db_engine) -> AsyncGenerator[AsyncSession, None]:
-    """Transactional session rolled back after each test (optional pattern).
-
-    Here we commit in the dependency override like production; tests that need
-    isolation create their own session from `db_engine`.
-    """
+    """Session from the test engine; finer isolation can use `db_engine` directly."""
     factory = async_sessionmaker(db_engine, class_=AsyncSession, expire_on_commit=False)
     async with factory() as session:
         yield session

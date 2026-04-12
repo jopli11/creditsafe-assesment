@@ -13,13 +13,9 @@ from app.schemas.customer import CustomerCreate, CustomerListResponse, CustomerR
 
 
 def _build_response_data(payload: CustomerCreate) -> str:
-    """Simulate downstream processing / enrichment (SRS: optionally enrich or transform).
+    """Placeholder for downstream enrichment (e.g. external scoring). Deterministic for tests.
 
-    In production this might call an external scoring API; here we return a
-    deterministic, human-readable summary suitable for demos and tests.
-
-    Note: `payload.name` / `request_details` are already HTML-escaped at the schema
-    layer for safe persistence; we do not escape again to avoid double-encoding.
+    Name and `request_details` are already escaped in `CustomerCreate` — no second pass.
     """
     return (
         f"Processed request for {payload.name} "

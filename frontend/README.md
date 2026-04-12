@@ -11,4 +11,4 @@ npm run test
 npm run lint
 ```
 
-Set `VITE_API_BASE_URL` (see `.env.example`) to your FastAPI origin.
+`VITE_API_BASE_URL` in `.env` should point at the API origin (same value as in Compose when not using Docker).

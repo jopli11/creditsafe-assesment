@@ -36,9 +36,9 @@ docker compose up --build
 | OpenAPI   | http://localhost:8000/docs |
 | Frontend  | http://localhost:5173      |
 
-Environment templates: [backend/.env.example](backend/.env.example), [frontend/.env.example](frontend/.env.example).
+Without Docker, use `backend/.env` and `frontend/.env` with the same variables as in `docker-compose.yml`.
 
-The browser calls the API at **`http://localhost:8000`** (see `VITE_API_BASE_URL` in Compose) so CORS matches your host machine.
+The browser calls the API at **`http://localhost:8000`** (`VITE_API_BASE_URL` in Compose) so CORS matches the host.
 
 ## Development (without Docker)
 
@@ -49,7 +49,7 @@ cd backend
 python -m venv .venv
 # Windows: .venv\Scripts\activate
 pip install -e ".[dev]"
-# Set DATABASE_URL (see backend/.env.example), ensure Postgres is running
+# DATABASE_URL + CORS_ORIGINS in backend/.env; Postgres running
 alembic upgrade head
 uvicorn app.main:app --reload --port 8000
 ```
@@ -59,7 +59,7 @@ uvicorn app.main:app --reload --port 8000
 ```bash
 cd frontend
 npm install
-# Set VITE_API_BASE_URL=http://localhost:8000 (see frontend/.env.example)
+# VITE_API_BASE_URL in frontend/.env
 npm run dev
 ```
 

@@ -9,6 +9,8 @@ venv/
 ENV/
 .env
 .env.local
+# Safe dev default for Vite (no secrets); track in git for clones.
+!frontend/.env
 *.egg-info/
 .eggs/
 dist/
@@ -37,3 +39,5 @@ Thumbs.db
 
 # Logs
 *.log
+
+INTERVIEW_WALKTHROUGH.md

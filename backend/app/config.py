@@ -1,8 +1,4 @@
-"""Application configuration loaded from environment variables.
-
-We use Pydantic Settings so the same code works in Docker, local dev, and tests
-(tests override env vars in fixtures).
-"""
+"""Application configuration from environment variables (Pydantic Settings)."""
 
 from functools import lru_cache
 
@@ -17,17 +13,8 @@ class Settings(BaseSettings):
         extra="ignore",
     )
 
-    # Default matches docker-compose local `db` service
-    database_url: str = Field(
-        default="postgresql+asyncpg://app:app@localhost:5432/customers",
-        alias="DATABASE_URL",
-    )
-
-    # Comma-separated list of allowed browser origins for CORS
-    cors_origins: str = Field(
-        default="http://localhost:5173,http://127.0.0.1:5173",
-        alias="CORS_ORIGINS",
-    )
+    database_url: str = Field(..., alias="DATABASE_URL")
+    cors_origins: str = Field(..., alias="CORS_ORIGINS")
 
     @field_validator("database_url")
     @classmethod
