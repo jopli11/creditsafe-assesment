@@ -1,5 +1,5 @@
 /**
- * Vite dev/build config: React plugin, `@` → `./src`, dev server on 5173 with host binding.
+ * Vite dev/build: React plugin, `@` → `./src`, dev server on 5173.
  */
 import path from "node:path";
 import { defineConfig } from "vite";
@@ -14,6 +14,6 @@ export default defineConfig({
   },
   server: {
     port: 5173,
-    host: true,
+    host: true, // reachable from host when Vite runs in Docker
   },
 });

@@ -1,13 +1,5 @@
 /**
- * Route: `/customers` — paginated customer directory.
- *
- * **Data**
- * `useCustomersQuery({ limit: PAGE_SIZE, offset })` — changing `offset` changes the
- * SWR key and fetches the next slice.
- *
- * **UX**
- * “New request” uses `<Button asChild><Link>` (Radix slot) so you get link semantics
- * + button styling. API failures show a destructive banner (e.g. API not running).
+ * Route `/customers`: paginated directory.
  */
 import { useState } from "react";
 import { Link } from "react-router-dom";
@@ -21,6 +13,7 @@ const PAGE_SIZE = 20;
 
 export function CustomersPage() {
   const [offset, setOffset] = useState(0);
+  // SWR key includes offset — changing page refetches the slice
   const { data, error, isLoading } = useCustomersQuery({
     limit: PAGE_SIZE,
     offset,
@@ -31,6 +24,7 @@ export function CustomersPage() {
       <section className="space-y-3">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <h2 className="text-lg font-semibold tracking-tight">Customers</h2>
+          {/* asChild: Radix slot — link semantics with button styling */}
           <Button size="sm" asChild>
             <Link to="/customers/new">New request</Link>
           </Button>

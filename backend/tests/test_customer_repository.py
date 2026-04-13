@@ -1,7 +1,4 @@
-"""Repository tests: async SQLite in-memory, schema from ``Base.metadata``.
-
-Exercises create/get/list without FastAPI — pure SQLAlchemy data access.
-"""
+"""Repository tests: in-memory SQLite + ``Base.metadata`` schema (no FastAPI)."""
 
 from uuid import uuid4
 

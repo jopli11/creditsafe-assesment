@@ -1,12 +1,5 @@
 /**
- * Top navigation — brand + primary routes.
- *
- * **`NavLink` + `end`**
- * The “Customers” link uses `end` so it is active only on `/customers`, not on
- * `/customers/...` child paths (otherwise it would stay highlighted on detail pages).
- *
- * **`aria-label="Main"`**
- * Landmark for screen readers on the `<nav>` element.
+ * Top navigation: brand and primary routes.
  */
 import { Link, NavLink } from "react-router-dom";
 
@@ -25,6 +18,7 @@ export function Header({ className }: { className?: string }) {
         <Link to="/customers" className="text-lg font-semibold tracking-tight hover:opacity-90">
           Customer Information
         </Link>
+        {/* `end`: "Customers" active only on /customers, not on /customers/:id */}
         <nav className="flex flex-wrap items-center gap-1 text-sm" aria-label="Main">
           <NavLink to="/customers" className={navLinkClass} end>
             Customers

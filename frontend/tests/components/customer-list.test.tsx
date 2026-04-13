@@ -1,6 +1,4 @@
-/**
- * List tests: render with `MemoryRouter`, assert pagination summary and Next callback.
- */
+/** CustomerList: pagination chrome + Link children (needs Router context). */
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";

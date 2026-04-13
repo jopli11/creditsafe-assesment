@@ -1,25 +1,4 @@
-"""API request/response models (Pydantic v2) — single source of truth for JSON shapes.
-
-**CustomerCreate (POST body)**
-  - **Email / phone:** Step-by-step validation via ``_email_validation_error`` and
-    ``_uk_phone_validation_error`` — specific user-facing strings at each failure
-    (not a generic “invalid”). The **same messages** are implemented in
-    ``frontend/src/lib/customer-validation.ts`` so client and server stay aligned;
-    the API remains authoritative for security.
-  - **UK phone:** Normalises ``+44`` / ``44``… to a leading ``0``, checks length
-    and prefixes (``07`` mobiles, ``01``/``02``/``03`` landlines, etc.).
-  - **XSS:** ``html.escape`` on ``name`` and ``request_details`` after whitespace
-    normalisation — mitigates **stored** XSS if data is ever rendered outside React
-    (email, PDF, admin tools). Email is not HTML-escaped the same way (format checks
-    already restrict characters).
-
-**Responses**
-  - ``CustomerSubmitResponse``: 201 payload with ``id`` + success metadata.
-  - ``CustomerResponse``: ``from_attributes=True`` maps ORM rows for GET responses.
-  - ``CustomerListResponse``: items + ``total`` / ``limit`` / ``offset`` for the table.
-
-OpenAPI / ``/docs`` is generated from these models automatically.
-"""
+"""Pydantic v2 models for API JSON — OpenAPI / ``/docs`` are generated from these classes."""
 
 from __future__ import annotations
 
@@ -113,7 +92,7 @@ def _strip_and_escape_free_text(value: str) -> str:
 
 
 class CustomerCreate(BaseModel):
-    """Payload for POST /api/customers."""
+    """POST /api/customers body — validation messages mirror ``frontend/src/lib/customer-validation.ts``."""
 
     name: str = Field(min_length=1, max_length=255)
     email: str = Field(max_length=320)
@@ -149,6 +128,7 @@ class CustomerCreate(BaseModel):
     @field_validator("name", "request_details")
     @classmethod
     def escape_text_fields(cls, v: str) -> str:
+        # Stored XSS mitigation if data leaves this API (email, PDFs, admin HTML)
         return _strip_and_escape_free_text(v)
 
 

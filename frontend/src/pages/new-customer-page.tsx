@@ -1,11 +1,5 @@
 /**
- * Route: `/customers/new` — dedicated create flow (not a modal) for deep-linking
- * and clear back-button behaviour.
- *
- * **After successful POST**
- * 1. `mutate` with a key filter revalidates **all** `["customers", …]` caches (any
- *    limit/offset) so whichever list page you land on includes the new row.
- * 2. `navigate("/customers")` returns to the directory without a full document reload.
+ * Route `/customers/new`: dedicated create flow (deep-linkable, clear back navigation).
  */
 import { useNavigate } from "react-router-dom";
 import { useSWRConfig } from "swr";
@@ -18,6 +12,7 @@ export function NewCustomerPage() {
   const { mutate } = useSWRConfig();
 
   const handleCreated = async () => {
+    // Revalidate every cached list page (any limit/offset) so the new row appears
     await mutate(
       (key) => Array.isArray(key) && key[0] === "customers",
       undefined,

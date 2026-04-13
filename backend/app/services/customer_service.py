@@ -1,24 +1,4 @@
-"""Customer application / use-case layer.
-
-**Input**
-  ``CustomerCreate`` has already run: UK email/phone rules, stripping, HTML escape
-  on free text. This layer trusts that contract.
-
-**Responsibility**
-  - Build ``Customer`` ORM objects and call the **repository** only (no raw SQL).
-  - **HTTP semantics:** map ``get_by_id`` → ``None`` to ``404`` via
-    ``HTTPException``. The repository never raises HTTP exceptions.
-  - **Enrichment:** ``_build_response_data`` simulates downstream processing (e.g.
-    credit scoring, KYC). In production this would call external APIs; here it
-    returns a deterministic string so tests stay stable.
-
-**Why ``_build_response_data`` is a module function**
-  Pure, stateless helper — easy to test and to swap for a real integration later.
-
-**Class**
-  ``CustomerService`` holds a ``CustomerRepository`` created with the same session
-  as the request — transactions stay scoped to ``get_session``.
-"""
+"""Customer use-cases: orchestrate repository calls and HTTP semantics (e.g. 404)."""
 
 from __future__ import annotations
 
@@ -33,12 +13,7 @@ from app.schemas.customer import CustomerCreate, CustomerListResponse, CustomerR
 
 
 def _build_response_data(payload: CustomerCreate) -> str:
-    """Simulated enrichment result stored in ``response_data``.
-
-    Production: replace with calls to scoring/verification services. Tests rely on
-    a predictable string. ``payload.name`` / ``request_details`` are already
-    HTML-escaped in ``CustomerCreate`` — do not escape again (avoid double-encoding).
-    """
+    """Deterministic placeholder for downstream enrichment (tests depend on shape)."""
     return (
         f"Processed request for {payload.name} "
         f"({payload.email}); details length={len(payload.request_details)} chars."
@@ -46,7 +21,7 @@ def _build_response_data(payload: CustomerCreate) -> str:
 
 
 class CustomerService:
-    """Use-case facade — see module docstring for layering and 404 handling."""
+    """Facade over CustomerRepository for one request-scoped session."""
 
     def __init__(self, session: AsyncSession) -> None:
         self._repo = CustomerRepository(session)
@@ -65,6 +40,7 @@ class CustomerService:
     async def get_customer(self, customer_id: UUID) -> CustomerResponse:
         row = await self._repo.get_by_id(customer_id)
         if row is None:
+            # Repository returns None; HTTP mapping stays in the service layer
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Customer not found")
         return CustomerResponse.model_validate(row)
 

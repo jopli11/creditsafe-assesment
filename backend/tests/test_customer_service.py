@@ -1,7 +1,4 @@
-"""Service-layer tests: ``CustomerService`` with mocked repository.
-
-Proves create path returns success shape and enrichment text; get returns 404 when repo yields None.
-"""
+"""Service tests with a mocked ``CustomerRepository`` (no real DB)."""
 
 from unittest.mock import AsyncMock, MagicMock
 from uuid import uuid4

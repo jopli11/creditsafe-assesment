@@ -1,17 +1,4 @@
-"""Revision 001 — create ``customers`` + index on ``email``.
-
-**Schema alignment**
-  Columns match ``app.models.customer`` so ORM and migration stay in sync (UUID PK,
-  string lengths, ``Text`` for long fields, timezone-aware ``created_at`` with
-  ``server_default`` — DB-generated timestamp).
-
-**Index**
-  Non-unique index on ``email`` for lookup/filter workloads; uniqueness not enforced
-  here (product decision).
-
-**Rollback**
-  ``downgrade`` drops index then table — reversible for dev/staging resets.
-"""
+"""Initial revision: ``customers`` table + non-unique index on ``email``."""
 
 # Revision metadata (Alembic)
 # Revision ID: 001
@@ -46,6 +33,7 @@ def upgrade() -> None:
         ),
         sa.PrimaryKeyConstraint("id"),
     )
+    # Lookup/filter; product may add uniqueness later
     op.create_index(op.f("ix_customers_email"), "customers", ["email"], unique=False)
 
 

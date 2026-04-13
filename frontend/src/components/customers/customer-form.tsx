@@ -1,20 +1,5 @@
 /**
- * Create-customer form — React Hook Form + Zod + shared validators.
- *
- * **Stack**
- * - **RHF** holds field state, blur/focus, and submit orchestration.
- * - **Zod** (`zodResolver`) validates before submit; `superRefine` plugs in email/phone
- *   from `customer-validation.ts` so messages match the backend.
- * - **`useTransition`** marks the async POST as a transition — button shows pending
- *   state without blocking typing elsewhere.
- *
- * **`noValidate`**
- * Disables browser built-in validation so **only** Zod messages show (consistent
- * copy with the API).
- *
- * **Errors**
- * Server failures use `ApiError` → toast + optional inline `serverError` for cases
- * the client did not pre-validate.
+ * Create-customer form: React Hook Form + Zod + shared email/phone validators.
  */
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState, useTransition } from "react";
@@ -68,6 +53,7 @@ export function CustomerForm({ onCreated }: { onCreated?: () => void | Promise<v
 
   const onSubmit = (values: CustomerFormValues) => {
     setServerError(null);
+    // Keeps submit pending without blocking typing in other fields
     startTransition(async () => {
       try {
         const result = await submitCustomer(values);
@@ -88,6 +74,7 @@ export function CustomerForm({ onCreated }: { onCreated?: () => void | Promise<v
         <CardTitle>New customer request</CardTitle>
       </CardHeader>
       <CardContent>
+        {/* noValidate: only Zod copy (aligned with API), not browser default messages */}
         <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)} noValidate>
           <div className="grid gap-2">
             <Label htmlFor="name">Name</Label>

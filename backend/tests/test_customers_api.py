@@ -1,8 +1,4 @@
-"""Integration tests: HTTP → FastAPI app → real SQLite via dependency override.
-
-Uses ``async_client`` from ``conftest`` (httpx ASGITransport, swapped ``get_session``).
-Covers create, get, list pagination, 404, and 422 validation without running Docker.
-"""
+"""Integration tests: full HTTP stack with SQLite via ``async_client`` fixture."""
 
 from uuid import UUID
 

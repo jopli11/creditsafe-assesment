@@ -1,6 +1,5 @@
 /**
- * Vitest + jsdom: component tests under `tests/`, `@` alias matches Vite.
- * `setupFiles` loads Testing Library matchers; `globals` enables `describe`/`it` without imports.
+ * Vitest + jsdom: same `@` alias as Vite; setup loads Testing Library matchers.
  */
 import path from "node:path";
 import { defineConfig } from "vitest/config";
@@ -10,7 +9,7 @@ export default defineConfig({
   plugins: [react()],
   test: {
     environment: "jsdom",
-    globals: true,
+    globals: true, // describe/it without imports in test files
     setupFiles: ["./tests/setup.ts"],
     include: ["./tests/**/*.test.{ts,tsx}"],
   },

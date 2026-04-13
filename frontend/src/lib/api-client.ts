@@ -1,27 +1,9 @@
 /**
- * Typed fetch wrapper for the FastAPI JSON API — central place for base URL, headers, errors.
- *
- * **Base URL**
- * `import.meta.env.VITE_API_BASE_URL` (Vite injects at build time). In Docker Compose
- * this is `http://localhost:8000` because the **browser** on the host calls the API;
- * it is not the internal Docker service name. Fallback `http://localhost:8000` when
- * unset matches local `uvicorn` defaults.
- *
- * **Errors**
- * FastAPI returns `detail` as a string, a list of validation objects `{ loc, msg }`,
- * or nested objects. `formatErrorDetail` normalises those into one message string
- * for toasts and inline UI. `ApiError` keeps `status` + raw `body` so detail pages
- * can treat 404 differently from 500.
- *
- * **Parsing**
- * `parseJsonSafe` reads text first — avoids throw on empty body or non-JSON errors.
- *
- * **Endpoints**
- * `GET /api/customers?limit&offset`, `GET /api/customers/:id`, `POST /api/customers`.
+ * Typed fetch wrapper for the FastAPI JSON API: base URL, headers, and error shaping.
  */
-
 import type { CustomerCreatePayload, CustomerListResponse, CustomerResponse, CustomerSubmitResponse } from "@/types/customer";
 
+// Preserves HTTP status and raw body so callers can branch (e.g. 404 vs 500)
 export class ApiError extends Error {
   readonly status: number;
   readonly body: unknown;
@@ -35,11 +17,12 @@ export class ApiError extends Error {
 }
 
 export function getApiBaseUrl(): string {
+  // Vite injects at build time. Browser uses host-accessible URL (Compose: localhost:8000), not the Docker service name
   const raw = import.meta.env.VITE_API_BASE_URL;
   if (raw && raw.length > 0) {
     return raw.replace(/\/$/, "");
   }
-  return "http://localhost:8000";
+  return "http://localhost:8000"; // matches local uvicorn default when unset
 }
 
 function formatErrorDetail(body: unknown): string | null {
@@ -49,6 +32,7 @@ function formatErrorDetail(body: unknown): string | null {
   if (!("detail" in body)) {
     return null;
   }
+  // FastAPI: detail may be str, validation object list, or nested — normalise to one string for UI
   const detail = (body as { detail: unknown }).detail;
   if (typeof detail === "string") {
     return detail;
@@ -77,7 +61,7 @@ async function parseJsonSafe(response: Response): Promise<unknown> {
   try {
     return JSON.parse(text) as unknown;
   } catch {
-    return text;
+    return text; // non-JSON error bodies
   }
 }
 

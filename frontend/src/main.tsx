@@ -1,13 +1,6 @@
 /**
- * Application bootstrap — React 19 `createRoot`, client-side `BrowserRouter`.
- *
- * **StrictMode** — double-invokes render in dev to surface unsafe side effects.
- *
- * **Sonner** (`<Toaster />`) — global toast host for success/error after form submit;
- * `richColors` + top-right matches common dashboard UX. Toasts are declared here so
- * any route can fire `toast.*` without mounting a provider per page.
- *
- * **Styles** — `./index.css` pulls in Tailwind layers + design tokens (shadcn-style).
+ * Application bootstrap: mount the SPA, routing, global styles, and toast host.
+ * Detail (StrictMode, BrowserRouter, Sonner, Tailwind entry) is noted inline below.
  */
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
@@ -15,7 +8,7 @@ import { BrowserRouter } from "react-router-dom";
 import { Toaster } from "sonner";
 
 import App from "./App";
-import "./index.css";
+import "./index.css"; // Tailwind layers + design tokens (shadcn-style)
 
 const rootElement = document.getElementById("root");
 if (!rootElement) {
@@ -23,9 +16,12 @@ if (!rootElement) {
 }
 
 createRoot(rootElement).render(
+  // Dev-only: double-invokes render to surface unsafe side effects
   <StrictMode>
+    {/* Client-side routing only — no SSR */}
     <BrowserRouter>
       <App />
+      {/* Global host: any route can call toast.* without a per-page provider */}
       <Toaster richColors closeButton position="top-right" />
     </BrowserRouter>
   </StrictMode>,

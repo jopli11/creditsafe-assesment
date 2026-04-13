@@ -1,10 +1,6 @@
 /**
- * Mobile-only summary tiles for the customer directory (`md:hidden` in `CustomerList`).
- *
- * **Compound components**
- * `CustomerCard.Root` / `Header` / `Body` / `Footer` / `TitleLink` instead of props
- * like `isCompact`, `showLink`, `variant` — composition stays flexible and readable
- * (same idea as Radix-style APIs).
+ * Mobile-only card tiles for the directory (`md:hidden` from `CustomerList`).
+ * Compound components avoid boolean prop sprawl (Radix-style composition).
  */
 import type { ReactNode } from "react";
 import { Link } from "react-router-dom";

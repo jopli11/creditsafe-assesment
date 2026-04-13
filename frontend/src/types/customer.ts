@@ -1,15 +1,8 @@
 /**
- * TypeScript types for API JSON — mirrors `backend/app/schemas/customer.py`.
- *
- * **Why manual types (not OpenAPI codegen)?**
- * Keeps the assessment self-contained; in production you’d generate from `/openapi.json`
- * or use `openapi-typescript` in CI to prevent drift.
- *
- * **Conventions**
- * - IDs are **strings** in JSON (UUID serialization).
- * - `created_at` is ISO 8601 string from the API.
+ * TypeScript types for API JSON — kept manual here; production might codegen from OpenAPI.
  */
 
+// 201 POST body — UUID as string in JSON
 export type CustomerSubmitResponse = {
   id: string;
   status: string;
@@ -23,7 +16,7 @@ export type CustomerResponse = {
   phone: string;
   request_details: string;
   response_data: string;
-  created_at: string;
+  created_at: string; // ISO 8601 from API
 };
 
 export type CustomerListResponse = {

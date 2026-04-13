@@ -1,23 +1,4 @@
-"""Alembic migration environment — async SQLAlchemy, URL from application settings.
-
-**Why ``get_settings().database_url``?**
-  One env var (``DATABASE_URL``) drives both **uvicorn** and **alembic upgrade**.
-  The URL in ``alembic.ini`` is a placeholder only; ``env.py`` overwrites it so
-  local, Docker, and CI never drift.
-
-**Metadata**
-  ``target_metadata = Base.metadata``. Importing ``app.models.customer`` registers
-  the ``customers`` table for autogenerate.
-
-**Online vs offline**
-  - **Online:** ``async_engine_from_config`` + ``NullPool`` (migrations are
-    short-lived; no need for a warm pool). ``run_sync`` bridges Alembic’s sync
-    API to async connections.
-  - **Offline:** SQL scripts with literal binds — for generating SQL files without DB.
-
-**CLI entry:** ``run_migrations_online`` uses ``asyncio.run`` because the Alembic
-process is synchronous at the top level.
-"""
+"""Alembic environment: async engine, URL from app settings, metadata from ORM models."""
 
 from __future__ import annotations
 
@@ -32,7 +13,7 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 from app.config import get_settings
 from app.models.base import Base
 
-# Import models so metadata is populated for autogenerate
+# Import models so Base.metadata is populated for autogenerate
 from app.models import customer  # noqa: F401
 
 config = context.config
@@ -44,11 +25,12 @@ target_metadata = Base.metadata
 
 
 def get_url() -> str:
+    # Same DATABASE_URL as uvicorn — alembic.ini placeholder is overwritten here
     return get_settings().database_url
 
 
 def run_migrations_offline() -> None:
-    """Run migrations in 'offline' mode (SQL script generation)."""
+    """Generate SQL scripts without a live DB connection."""
     context.configure(
         url=get_url(),
         target_metadata=target_metadata,
@@ -69,13 +51,14 @@ def do_run_migrations(connection: Connection) -> None:
 
 
 async def run_async_migrations() -> None:
-    """Run migrations in 'online' mode with async engine."""
+    """Online mode: run migrations against a real database."""
     configuration = config.get_section(config.config_ini_section) or {}
     configuration["sqlalchemy.url"] = get_url()
 
     connectable = async_engine_from_config(
         configuration,
         prefix="sqlalchemy.",
+        # Short-lived migration process — no need for a warm connection pool
         poolclass=pool.NullPool,
     )
 
@@ -86,6 +69,7 @@ async def run_async_migrations() -> None:
 
 
 def run_migrations_online() -> None:
+    # Alembic CLI is sync; bridge async engine with asyncio.run
     asyncio.run(run_async_migrations())
 
 

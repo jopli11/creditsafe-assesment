@@ -1,7 +1,4 @@
-"""Unit tests for ``CustomerCreate`` — no HTTP, no DB.
-
-Valid payloads, invalid email/phone, HTML escaping on name/details (XSS mitigation).
-"""
+"""Unit tests for ``CustomerCreate`` (Pydantic only — no HTTP or DB)."""
 
 import pytest
 from pydantic import ValidationError

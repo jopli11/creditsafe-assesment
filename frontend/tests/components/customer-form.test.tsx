@@ -1,6 +1,4 @@
-/**
- * Form tests: empty submit shows Zod errors; valid submit mocks `submitCustomer` and checks reset + `onCreated`.
- */
+/** CustomerForm: validation on empty submit; mocked POST + reset + onCreated. */
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
@@ -8,6 +6,7 @@ import { describe, expect, it, vi } from "vitest";
 import { CustomerForm } from "@/components/customers/customer-form";
 import { submitCustomer } from "@/hooks/use-customers";
 
+// Partial mock — real SWR hooks, stubbed create path only
 vi.mock("@/hooks/use-customers", async (importOriginal) => {
   const actual = await importOriginal<typeof import("@/hooks/use-customers")>();
   return {

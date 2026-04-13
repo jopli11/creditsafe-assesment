@@ -1,4 +1,4 @@
-/** Detail card: all customer fields render from a sample `CustomerResponse`. */
+/** CustomerDetail: field rendering from a sample `CustomerResponse`. */
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
