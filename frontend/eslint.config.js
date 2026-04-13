@@ -22,4 +22,11 @@ export default tseslint.config(
       "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
     },
   },
+  // Compound components (Root/Header/…) + one object export are valid; the rule expects a single component export
+  {
+    files: ["**/components/customers/customer-card.tsx"],
+    rules: {
+      "react-refresh/only-export-components": "off",
+    },
+  },
 );
