@@ -1,4 +1,4 @@
-"""FastAPI app factory — ASGI entrypoint for uvicorn (`app.main:app`)."""
+"""FastAPI app factory — ASGI (Asynchronous Server Gateway Interface) entrypoint for uvicorn (`app.main:app`)."""
 
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager

@@ -16,7 +16,7 @@ export type CustomerResponse = {
   phone: string;
   request_details: string;
   response_data: string;
-  created_at: string; // ISO 8601 from API
+  created_at: string; // ISO 8601 from API "2025-06-01T12:00:00.000Z" international standard 
 };
 
 export type CustomerListResponse = {

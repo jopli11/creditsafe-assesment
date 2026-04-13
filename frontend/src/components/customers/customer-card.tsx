@@ -1,5 +1,5 @@
 /**
- * Mobile-only card tiles for the directory (`md:hidden` from `CustomerList`).
+ * Mobile-only card tiles for the directory.
  * Compound components avoid boolean prop sprawl (Radix-style composition).
  */
 import type { ReactNode } from "react";
