@@ -1,3 +1,14 @@
+/**
+ * Route: `/customers/:id` — single-customer view driven by URL param.
+ *
+ * **Data**
+ * `useCustomerQuery(id)` — SWR key `null` when `id` missing (should not happen here).
+ *
+ * **Error UX**
+ * - `ApiError` + status **404** → friendly “Customer not found” (bad bookmark / deleted row).
+ * - Other errors → generic load failure (network, 500).
+ * - **Loading:** skeleton until `data` exists.
+ */
 import { Link, useParams } from "react-router-dom";
 
 import { CustomerDetail, CustomerDetailSkeleton } from "@/components/customers/customer-detail";

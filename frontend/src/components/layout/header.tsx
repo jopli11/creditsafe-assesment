@@ -1,3 +1,13 @@
+/**
+ * Top navigation — brand + primary routes.
+ *
+ * **`NavLink` + `end`**
+ * The “Customers” link uses `end` so it is active only on `/customers`, not on
+ * `/customers/...` child paths (otherwise it would stay highlighted on detail pages).
+ *
+ * **`aria-label="Main"`**
+ * Landmark for screen readers on the `<nav>` element.
+ */
 import { Link, NavLink } from "react-router-dom";
 
 import { cn } from "@/lib/utils";

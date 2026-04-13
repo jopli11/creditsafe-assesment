@@ -1,4 +1,24 @@
-"""Customer use-cases: validation already applied by Pydantic; enrich and persist."""
+"""Customer application / use-case layer.
+
+**Input**
+  ``CustomerCreate`` has already run: UK email/phone rules, stripping, HTML escape
+  on free text. This layer trusts that contract.
+
+**Responsibility**
+  - Build ``Customer`` ORM objects and call the **repository** only (no raw SQL).
+  - **HTTP semantics:** map ``get_by_id`` → ``None`` to ``404`` via
+    ``HTTPException``. The repository never raises HTTP exceptions.
+  - **Enrichment:** ``_build_response_data`` simulates downstream processing (e.g.
+    credit scoring, KYC). In production this would call external APIs; here it
+    returns a deterministic string so tests stay stable.
+
+**Why ``_build_response_data`` is a module function**
+  Pure, stateless helper — easy to test and to swap for a real integration later.
+
+**Class**
+  ``CustomerService`` holds a ``CustomerRepository`` created with the same session
+  as the request — transactions stay scoped to ``get_session``.
+"""
 
 from __future__ import annotations
 
@@ -13,9 +33,11 @@ from app.schemas.customer import CustomerCreate, CustomerListResponse, CustomerR
 
 
 def _build_response_data(payload: CustomerCreate) -> str:
-    """Placeholder for downstream enrichment (e.g. external scoring). Deterministic for tests.
+    """Simulated enrichment result stored in ``response_data``.
 
-    Name and `request_details` are already escaped in `CustomerCreate` — no second pass.
+    Production: replace with calls to scoring/verification services. Tests rely on
+    a predictable string. ``payload.name`` / ``request_details`` are already
+    HTML-escaped in ``CustomerCreate`` — do not escape again (avoid double-encoding).
     """
     return (
         f"Processed request for {payload.name} "
@@ -24,7 +46,7 @@ def _build_response_data(payload: CustomerCreate) -> str:
 
 
 class CustomerService:
-    """Coordinates repository access and HTTP-level errors."""
+    """Use-case facade — see module docstring for layering and 404 handling."""
 
     def __init__(self, session: AsyncSession) -> None:
         self._repo = CustomerRepository(session)

@@ -1,3 +1,6 @@
+# Dev-server image for the assessment: Vite on 0.0.0.0 so the host browser can reach
+# the container. VITE_API_BASE_URL is set in Compose (browser → localhost:8000).
+
 FROM node:22-alpine
 
 WORKDIR /app

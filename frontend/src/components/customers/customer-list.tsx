@@ -1,3 +1,17 @@
+/**
+ * Customer directory: loading skeleton, empty state, responsive layout, pagination chrome.
+ *
+ * **Responsive**
+ * Tailwind `md:hidden` / `hidden md:block` — cards on small viewports, data table
+ * on desktop. No `matchMedia` in JS; both branches exist in the DOM (jsdom tests see both).
+ *
+ * **Pagination**
+ * Controlled by parent (`offset`, `total`, `limit`) — `onPrev` / `onNext` bump offset;
+ * SWR refetches because the hook key includes `offset`.
+ *
+ * **Accessibility**
+ * Table semantics on desktop; cards remain readable tap targets on mobile.
+ */
 import { Link } from "react-router-dom";
 
 import { CustomerCard } from "@/components/customers/customer-card";

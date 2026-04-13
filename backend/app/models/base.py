@@ -1,7 +1,16 @@
-"""Declarative base for all ORM models."""
+"""SQLAlchemy ``DeclarativeBase`` — one metadata registry for the whole app.
+
+**Why it matters**
+  - **Alembic:** ``target_metadata = Base.metadata`` in ``env.py``; autogenerate
+    sees every model imported under ``app.models``.
+  - **Tests:** ``Base.metadata.create_all()`` builds SQLite schema from the same
+    definitions as Postgres (for integration tests).
+
+All ORM classes inherit from ``Base`` so migrations and tests stay consistent.
+"""
 
 from sqlalchemy.orm import DeclarativeBase
 
 
 class Base(DeclarativeBase):
-    """Shared metadata registry for Alembic autogenerate and `create_all` in tests."""
+    """Declarative base — see module docstring."""

@@ -1,4 +1,27 @@
-"""Async engine and session factory; `get_session` is wired as a FastAPI dependency."""
+"""Async SQLAlchemy 2 engine and request-scoped sessions.
+
+**Why async end-to-end?**
+  FastAPI routes and asyncpg are async. Sync DB calls in a request would block the
+  event loop and hurt throughput under load.
+
+**Engine**
+  - ``pool_pre_ping=True``: before handing out a pooled connection, SQLAlchemy
+    pings it so stale connections (after Postgres restart, network blip) are
+    discarded instead of failing mid-query.
+  - ``echo=False``: SQL logging off in production; turn on for debugging.
+
+**Session factory**
+  ``expire_on_commit=False``: after ``commit``, ORM rows used in responses stay
+  usable without lazy loads that could trigger IO after commit.
+
+**``get_session`` dependency**
+  Async generator: ``yield`` hands the session to the route; after the handler
+  finishes, ``commit()`` on success or ``rollback()`` on any exception. That is the
+  **unit-of-work** pattern — one transaction per HTTP request.
+
+**Note:** Engine is created at import time (``get_settings()`` runs once). Tests
+  override ``get_session`` so they do not hit production Postgres.
+"""
 
 from collections.abc import AsyncGenerator
 

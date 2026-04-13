@@ -1,3 +1,5 @@
+# Install: pip install -e ".[dev]" for pytest, ruff, mypy. Runtime deps list the API stack only.
+
 [project]
 name = "customer-api-backend"
 version = "0.1.0"

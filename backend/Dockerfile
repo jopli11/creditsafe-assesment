@@ -1,3 +1,6 @@
+# Production-style API image: runtime deps only (no pytest). Layer order caches pip
+# installs when only app code changes. Compose overrides CMD to run alembic then uvicorn.
+
 FROM python:3.12-slim
 
 WORKDIR /app

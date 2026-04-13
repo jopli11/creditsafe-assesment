@@ -1,3 +1,6 @@
+/**
+ * Vite dev/build config: React plugin, `@` → `./src`, dev server on 5173 with host binding.
+ */
 import path from "node:path";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";

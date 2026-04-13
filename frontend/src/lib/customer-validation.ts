@@ -1,6 +1,19 @@
 /**
- * Human-oriented validation for the customer form (aligned with backend).
- * UK phone: leading 0 domestic or +44 / 44 international; mobiles 07… (11 digits).
+ * Email + UK phone validators shared by the Zod schema (`customer-form.tsx`).
+ *
+ * **Validation parity**
+ * Strings and rules are kept in sync with `backend/app/schemas/customer.py`
+ * (`_email_validation_error` / `_uk_phone_validation_error`). UX: users see the same
+ * hint whether the browser or the API rejects input. **Security:** never rely on
+ * the client alone — the API always re-validates.
+ *
+ * **UK phone**
+ * Strip to digits, normalise `44…` → leading `0`, enforce length and prefixes
+ * (07 mobiles, 01/02/03 landlines, etc.) — mirrors backend behaviour line-for-line.
+ *
+ * **Why separate from Zod?**
+ * Reusable, unit-testable functions; `superRefine` calls them and maps errors into
+ * Zod’s issue format.
  */
 
 const EMAIL_ALLOWED = /^[A-Za-z0-9.@_%+-]+$/;

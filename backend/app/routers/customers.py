@@ -1,4 +1,23 @@
-"""Customer HTTP routes — thin layer; logic lives in services."""
+"""Customer HTTP routes — intentionally thin.
+
+**Responsibility**
+  Map HTTP to service calls: status codes, ``response_model``, ``Query`` bounds.
+  No business logic, no direct SQL, no ``HTTPException`` for “not found” (that
+  belongs in the service).
+
+**Dependency chain**
+  ``Depends(get_customer_service)`` → injects ``CustomerService``, which itself
+  depends on ``get_session`` → one ``AsyncSession`` per request.
+
+**Endpoints**
+  - ``POST ""`` → 201 + ``CustomerSubmitResponse``. Body validated as
+    ``CustomerCreate`` by FastAPI (422 with field errors if invalid).
+  - ``GET /{customer_id}`` → path param parsed as ``UUID`` (422 if malformed).
+  - ``GET ""`` → list with ``limit`` (1–100, default 20) and ``offset`` (≥0).
+
+Keeping routers dumb makes them easy to test via integration tests and keeps
+domain rules in one place (service + schemas).
+"""
 
 from uuid import UUID
 

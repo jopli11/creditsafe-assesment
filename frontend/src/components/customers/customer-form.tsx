@@ -1,3 +1,21 @@
+/**
+ * Create-customer form — React Hook Form + Zod + shared validators.
+ *
+ * **Stack**
+ * - **RHF** holds field state, blur/focus, and submit orchestration.
+ * - **Zod** (`zodResolver`) validates before submit; `superRefine` plugs in email/phone
+ *   from `customer-validation.ts` so messages match the backend.
+ * - **`useTransition`** marks the async POST as a transition — button shows pending
+ *   state without blocking typing elsewhere.
+ *
+ * **`noValidate`**
+ * Disables browser built-in validation so **only** Zod messages show (consistent
+ * copy with the API).
+ *
+ * **Errors**
+ * Server failures use `ApiError` → toast + optional inline `serverError` for cases
+ * the client did not pre-validate.
+ */
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";

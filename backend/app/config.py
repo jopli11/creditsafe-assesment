@@ -1,4 +1,21 @@
-"""Application configuration from environment variables (Pydantic Settings)."""
+"""Application configuration from the environment.
+
+**Why Pydantic Settings (not raw ``os.getenv``)?**
+  Typed fields, validation at import time, and ``.env`` loading in one place. Missing
+  required vars fail fast with a clear error instead of ``None`` at runtime.
+
+**Behaviour**
+  - ``DATABASE_URL`` / ``CORS_ORIGINS`` use ``Field(...)`` — no Python defaults, so
+    there is no second source of truth beside env / ``.env``.
+  - ``env_file=".env"`` loads ``backend/.env`` when you run from ``backend/``;
+    Docker Compose passes the same keys via ``environment:`` (no file needed).
+  - ``strip_database_url`` trims accidental whitespace from pasted connection strings.
+  - ``cors_origin_list`` splits the comma-separated env string for ``CORSMiddleware``
+    (e.g. Vite on ``localhost:5173`` and ``127.0.0.1:5173``).
+
+**Performance**
+  ``@lru_cache`` on ``get_settings()`` parses env once per process, not per request.
+"""
 
 from functools import lru_cache
 
@@ -28,5 +45,5 @@ class Settings(BaseSettings):
 
 @lru_cache
 def get_settings() -> Settings:
-    """Cached settings instance — avoids re-parsing env on every request."""
+    """Return the process-wide ``Settings`` singleton (parse ``.env`` once per worker)."""
     return Settings()

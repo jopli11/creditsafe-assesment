@@ -1,4 +1,14 @@
-/** Mirrors backend Pydantic models — keep in sync for interview walkthroughs. */
+/**
+ * TypeScript types for API JSON — mirrors `backend/app/schemas/customer.py`.
+ *
+ * **Why manual types (not OpenAPI codegen)?**
+ * Keeps the assessment self-contained; in production you’d generate from `/openapi.json`
+ * or use `openapi-typescript` in CI to prevent drift.
+ *
+ * **Conventions**
+ * - IDs are **strings** in JSON (UUID serialization).
+ * - `created_at` is ISO 8601 string from the API.
+ */
 
 export type CustomerSubmitResponse = {
   id: string;

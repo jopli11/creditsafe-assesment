@@ -1,4 +1,19 @@
-"""Customer persistence — SQLAlchemy only; no business rules."""
+"""Customer data access — SQLAlchemy only (persistence layer).
+
+**Design**
+  No FastAPI imports, no ``HTTPException``. Callers interpret ``None`` and map to
+  HTTP. Easy to mock in service tests and to swap databases behind the same API.
+
+**``create``**
+  ``add`` + ``flush`` persists the INSERT within the current transaction so
+  server-side defaults (e.g. ``created_at``) exist; ``refresh`` reloads the row.
+  **Commit** happens in ``get_session`` after the route returns — not here — so
+  a failure later in the request rolls back the whole unit of work.
+
+**``get_by_id`` / ``list_paginated``**
+  ``scalar_one_or_none()`` for optional rows. List uses **two** queries: total
+  count for pagination UI, then ``ORDER BY created_at DESC`` with ``limit``/``offset``.
+"""
 
 from __future__ import annotations
 
@@ -11,7 +26,7 @@ from app.models.customer import Customer
 
 
 class CustomerRepository:
-    """Encapsulates CRUD queries for `Customer` rows."""
+    """CRUD for ``Customer`` rows — see module docstring for flush/commit split."""
 
     def __init__(self, session: AsyncSession) -> None:
         self._session = session

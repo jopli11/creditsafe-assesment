@@ -1,4 +1,23 @@
-"""Alembic environment — async migrations against the configured DATABASE_URL."""
+"""Alembic migration environment — async SQLAlchemy, URL from application settings.
+
+**Why ``get_settings().database_url``?**
+  One env var (``DATABASE_URL``) drives both **uvicorn** and **alembic upgrade**.
+  The URL in ``alembic.ini`` is a placeholder only; ``env.py`` overwrites it so
+  local, Docker, and CI never drift.
+
+**Metadata**
+  ``target_metadata = Base.metadata``. Importing ``app.models.customer`` registers
+  the ``customers`` table for autogenerate.
+
+**Online vs offline**
+  - **Online:** ``async_engine_from_config`` + ``NullPool`` (migrations are
+    short-lived; no need for a warm pool). ``run_sync`` bridges Alembic’s sync
+    API to async connections.
+  - **Offline:** SQL scripts with literal binds — for generating SQL files without DB.
+
+**CLI entry:** ``run_migrations_online`` uses ``asyncio.run`` because the Alembic
+process is synchronous at the top level.
+"""
 
 from __future__ import annotations
 

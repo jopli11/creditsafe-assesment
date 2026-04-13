@@ -1,3 +1,6 @@
+/**
+ * SWR hook tests: mock `fetch` for list load; `useCustomerQuery(undefined)` must not fetch.
+ */
 import { renderHook, waitFor } from "@testing-library/react";
 import type { ReactNode } from "react";
 import { SWRConfig } from "swr";

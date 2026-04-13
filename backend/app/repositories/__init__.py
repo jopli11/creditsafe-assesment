@@ -1,1 +1,1 @@
-"""Data access layer."""
+"""Repositories — SQLAlchemy persistence only (no FastAPI imports)."""

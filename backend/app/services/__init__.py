@@ -1,1 +1,1 @@
-"""Domain / application services."""
+"""Application services (use-cases orchestrating repositories and HTTP concerns)."""

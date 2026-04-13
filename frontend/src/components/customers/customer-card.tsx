@@ -1,13 +1,17 @@
+/**
+ * Mobile-only summary tiles for the customer directory (`md:hidden` in `CustomerList`).
+ *
+ * **Compound components**
+ * `CustomerCard.Root` / `Header` / `Body` / `Footer` / `TitleLink` instead of props
+ * like `isCompact`, `showLink`, `variant` — composition stays flexible and readable
+ * (same idea as Radix-style APIs).
+ */
 import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
-/**
- * Compound component for a customer summary tile — avoids boolean prop modes
- * (`isCompact`, `showMeta`, etc.) by composing named slots instead.
- */
 function Root({ children, className }: { children: ReactNode; className?: string }) {
   return <Card className={cn(className)}>{children}</Card>;
 }

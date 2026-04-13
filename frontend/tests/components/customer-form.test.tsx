@@ -1,3 +1,6 @@
+/**
+ * Form tests: empty submit shows Zod errors; valid submit mocks `submitCustomer` and checks reset + `onCreated`.
+ */
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";

@@ -1,4 +1,25 @@
-"""Pytest fixtures: in-memory SQLite + httpx async client with DI overrides."""
+"""Pytest fixtures: SQLite in-memory + httpx ASGI client + dependency override.
+
+**Why env vars before imports?**
+  ``app.database`` builds the async engine at import time; ``Settings`` requires
+  ``DATABASE_URL`` / ``CORS_ORIGINS``. ``setdefault`` supplies values for test runs
+  when no ``.env`` is present (same URLs as local Postgres — the override replaces
+  the actual DB with SQLite for requests).
+
+**Fixtures**
+  - ``db_engine`` / ``db_session``: in-memory ``aiosqlite``, schema via
+    ``Base.metadata.create_all`` — real SQL, no mocks.
+  - ``async_client``: ``httpx.AsyncClient`` + ``ASGITransport(app=app)`` hits the
+    **real** FastAPI app in-process (no TCP). ``dependency_overrides[get_session]``
+    swaps in a session factory backed by the test engine; commit/rollback mirrors
+    production.
+
+**Why httpx async, not Starlette ``TestClient``?**
+  The app stack is fully async; sync test clients can block the event loop.
+
+**Why SQLite not Postgres in tests?**
+  Zero infra, sub-second runs; DI override still exercises router → service → repo.
+"""
 
 import os
 

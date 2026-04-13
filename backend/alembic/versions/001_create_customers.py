@@ -1,10 +1,22 @@
-"""create customers table
+"""Revision 001 — create ``customers`` + index on ``email``.
 
-Revision ID: 001
-Revises:
-Create Date: 2025-01-01
+**Schema alignment**
+  Columns match ``app.models.customer`` so ORM and migration stay in sync (UUID PK,
+  string lengths, ``Text`` for long fields, timezone-aware ``created_at`` with
+  ``server_default`` — DB-generated timestamp).
 
+**Index**
+  Non-unique index on ``email`` for lookup/filter workloads; uniqueness not enforced
+  here (product decision).
+
+**Rollback**
+  ``downgrade`` drops index then table — reversible for dev/staging resets.
 """
+
+# Revision metadata (Alembic)
+# Revision ID: 001
+# Revises:
+# Create Date: 2025-01-01
 
 from typing import Sequence, Union
 

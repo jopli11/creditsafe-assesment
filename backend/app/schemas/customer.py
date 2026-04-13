@@ -1,4 +1,25 @@
-"""Request/response models: validation, email rules, HTML escaping on persisted text."""
+"""API request/response models (Pydantic v2) — single source of truth for JSON shapes.
+
+**CustomerCreate (POST body)**
+  - **Email / phone:** Step-by-step validation via ``_email_validation_error`` and
+    ``_uk_phone_validation_error`` — specific user-facing strings at each failure
+    (not a generic “invalid”). The **same messages** are implemented in
+    ``frontend/src/lib/customer-validation.ts`` so client and server stay aligned;
+    the API remains authoritative for security.
+  - **UK phone:** Normalises ``+44`` / ``44``… to a leading ``0``, checks length
+    and prefixes (``07`` mobiles, ``01``/``02``/``03`` landlines, etc.).
+  - **XSS:** ``html.escape`` on ``name`` and ``request_details`` after whitespace
+    normalisation — mitigates **stored** XSS if data is ever rendered outside React
+    (email, PDF, admin tools). Email is not HTML-escaped the same way (format checks
+    already restrict characters).
+
+**Responses**
+  - ``CustomerSubmitResponse``: 201 payload with ``id`` + success metadata.
+  - ``CustomerResponse``: ``from_attributes=True`` maps ORM rows for GET responses.
+  - ``CustomerListResponse``: items + ``total`` / ``limit`` / ``offset`` for the table.
+
+OpenAPI / ``/docs`` is generated from these models automatically.
+"""
 
 from __future__ import annotations
 

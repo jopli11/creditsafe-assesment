@@ -1,3 +1,16 @@
+/**
+ * Read-only detail card — contact, request copy, processed `response_data`.
+ *
+ * **`response_data`**
+ * Populated server-side by `_build_response_data` today (deterministic placeholder).
+ * Interview narrative: in production this would aggregate scoring / verification APIs.
+ *
+ * **Dates**
+ * `created_at` rendered with `toLocaleString()`; falls back to raw string if parse fails.
+ *
+ * **Skeleton**
+ * `CustomerDetailSkeleton` avoids layout jump while SWR loads.
+ */
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { CustomerResponse } from "@/types/customer";

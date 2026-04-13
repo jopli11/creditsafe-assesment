@@ -1,4 +1,7 @@
-"""Pydantic schema validation edge cases."""
+"""Unit tests for ``CustomerCreate`` — no HTTP, no DB.
+
+Valid payloads, invalid email/phone, HTML escaping on name/details (XSS mitigation).
+"""
 
 import pytest
 from pydantic import ValidationError

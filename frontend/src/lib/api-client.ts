@@ -1,6 +1,23 @@
 /**
- * Thin typed fetch wrapper around the FastAPI backend.
- * Centralizes base URL, JSON parsing, and structured errors for the UI layer.
+ * Typed fetch wrapper for the FastAPI JSON API — central place for base URL, headers, errors.
+ *
+ * **Base URL**
+ * `import.meta.env.VITE_API_BASE_URL` (Vite injects at build time). In Docker Compose
+ * this is `http://localhost:8000` because the **browser** on the host calls the API;
+ * it is not the internal Docker service name. Fallback `http://localhost:8000` when
+ * unset matches local `uvicorn` defaults.
+ *
+ * **Errors**
+ * FastAPI returns `detail` as a string, a list of validation objects `{ loc, msg }`,
+ * or nested objects. `formatErrorDetail` normalises those into one message string
+ * for toasts and inline UI. `ApiError` keeps `status` + raw `body` so detail pages
+ * can treat 404 differently from 500.
+ *
+ * **Parsing**
+ * `parseJsonSafe` reads text first — avoids throw on empty body or non-JSON errors.
+ *
+ * **Endpoints**
+ * `GET /api/customers?limit&offset`, `GET /api/customers/:id`, `POST /api/customers`.
  */
 
 import type { CustomerCreatePayload, CustomerListResponse, CustomerResponse, CustomerSubmitResponse } from "@/types/customer";
