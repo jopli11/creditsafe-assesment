@@ -1,4 +1,4 @@
-# Local full stack for the walkthrough: Postgres → API (migrations + uvicorn) → Vite.
+# Postgres → API (migrations + uvicorn) → Vite.
 # Browser calls API at localhost:8000 from the host; CORS_ORIGINS matches Vite on 5173.
 # Backend DATABASE_URL uses hostname `db` (Docker network), not localhost.
 
