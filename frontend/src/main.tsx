@@ -1,5 +1,5 @@
 /**
- * Application bootstrap: mount the SPA, routing, global styles, and toast host.
+ * Application bootstrap: mount the application, routing, global styles, and toast host.
  * Detail (StrictMode, BrowserRouter, Sonner, Tailwind entry) is noted inline below.
  */
 import { StrictMode } from "react";
